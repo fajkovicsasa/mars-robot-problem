@@ -1,6 +1,6 @@
 package com.kayak.marsrobot.enums;
 
-public enum MovementCommands {
+public enum MovementInstruction {
 
     FORWARD("F"),
     TURN_RIGHT("R"),
@@ -8,7 +8,7 @@ public enum MovementCommands {
 
     private final String value;
 
-    private MovementCommands(String value) {
+    private MovementInstruction(String value) {
         this.value = value;
     }
 

@@ -1,84 +1,75 @@
 package com.kayak.marsrobot.model;
 
 import com.kayak.marsrobot.enums.FacingDirection;
-import com.kayak.marsrobot.enums.MovementCommands;
+import com.kayak.marsrobot.enums.MovementInstruction;
 import com.kayak.marsrobot.exception.IllegalCommandException;
-import com.kayak.marsrobot.model.Coordinate;
 import com.kayak.marsrobot.resolver.FacingDirectionResolver;
+import com.kayak.marsrobot.util.CommandValidationUtil;
 
 public class Robot {
-    private FacingDirection facingDirection;
+    private FacingDirection currentFacingDirection;
     private Coordinate coordinate;
 
     public Robot(FacingDirection initialFacingDirection) {
         if (initialFacingDirection == null) {
             throw new IllegalArgumentException("Invalid facing direction");
         }
-        this.facingDirection = initialFacingDirection;
+        this.currentFacingDirection = initialFacingDirection;
         this.coordinate = new Coordinate(0, 0);
     }
 
-    public void move(String commandString) {
-        if (commandString == null || commandString.isBlank()) {
+    public void move(String commands) {
+        if (commands == null || commands.isBlank()) {
             throw new IllegalArgumentException("Input command can't empty.");
         }
 
-        if (!isValidCommand(commandString)) {
-            throw new IllegalCommandException(commandString);
+        if (!CommandValidationUtil.isValidCommand(commands)) {
+            throw new IllegalCommandException(commands);
         }
 
-        String[] commandCharacters = commandString.split("");
+        String[] commandCharacters = commands.split("");
         for (int i = 0; i < commandCharacters.length; i++) {
-            if (commandCharacters[i].equals(MovementCommands.FORWARD.getValue())) {
+            if (commandCharacters[i].equals(MovementInstruction.FORWARD.getValue())) {
                 moveForward();
-            } else if (commandCharacters[i].equals(MovementCommands.TURN_LEFT.getValue())) {
+            } else if (commandCharacters[i].equals(MovementInstruction.TURN_LEFT.getValue())) {
                 turnLeft();
-            } else if (commandCharacters[i].equals(MovementCommands.TURN_RIGHT.getValue())) {
+            } else if (commandCharacters[i].equals(MovementInstruction.TURN_RIGHT.getValue())) {
                 turnRight();
             }
         }
-
     }
 
     protected void moveForward() {
-        if (facingDirection == FacingDirection.NORTH) {
+        if (currentFacingDirection == FacingDirection.NORTH) {
             coordinate.setY(coordinate.getY() + 1);
         }
 
-        if (facingDirection == FacingDirection.EAST) {
+        if (currentFacingDirection == FacingDirection.EAST) {
             coordinate.setX(coordinate.getX() + 1);
         }
 
-        if (facingDirection == FacingDirection.SOUTH) {
+        if (currentFacingDirection == FacingDirection.SOUTH) {
             coordinate.setY(coordinate.getY() - 1);
         }
 
-        if (facingDirection == FacingDirection.WEST) {
+        if (currentFacingDirection == FacingDirection.WEST) {
             coordinate.setX(coordinate.getX() - 1);
         }
     }
 
     protected void turnLeft() {
-        facingDirection = FacingDirectionResolver.getNewFacingDirection(facingDirection, MovementCommands.TURN_LEFT);
+        currentFacingDirection = FacingDirectionResolver.changeFacingDirection(currentFacingDirection, MovementInstruction.TURN_LEFT);
     }
 
     protected void turnRight() {
-        facingDirection = FacingDirectionResolver.getNewFacingDirection(facingDirection, MovementCommands.TURN_RIGHT);
-    }
-
-    protected boolean isValidCommand(String commands) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-
-        for (MovementCommands mc : MovementCommands.class.getEnumConstants()) {
-            sb.append(mc.getValue());
-        }
-        sb.append("]+");
-
-        return commands.matches(sb.toString());
+        currentFacingDirection = FacingDirectionResolver.changeFacingDirection(currentFacingDirection, MovementInstruction.TURN_RIGHT);
     }
 
     public Coordinate getCoordinate() {
         return coordinate;
+    }
+
+    public FacingDirection getCurrentFacingDirection() {
+        return currentFacingDirection;
     }
 }
