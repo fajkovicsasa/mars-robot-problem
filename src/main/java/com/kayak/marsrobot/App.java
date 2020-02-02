@@ -3,9 +3,18 @@
  */
 package com.kayak.marsrobot;
 
+import com.kayak.marsrobot.enums.FacingDirection;
+import com.kayak.marsrobot.model.Robot;
+
 public class App {
 
     public static void main(String[] args) {
+        Robot robot = new Robot(FacingDirection.EAST);
+        robot.move("FFLFFRRFFRFFF");
+
+        System.out.println(robot.getCoordinate());
 
     }
+
+
 }
