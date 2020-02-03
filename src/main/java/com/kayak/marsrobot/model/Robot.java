@@ -6,7 +6,7 @@ import com.kayak.marsrobot.exception.IllegalCommandException;
 import com.kayak.marsrobot.resolver.FacingDirectionResolver;
 import com.kayak.marsrobot.util.CommandValidationUtil;
 
-public class Robot {
+public class Robot implements RobotInterface {
     private FacingDirection currentFacingDirection;
     private Coordinate coordinate;
 
@@ -18,6 +18,7 @@ public class Robot {
         this.coordinate = new Coordinate(0, 0);
     }
 
+    @Override
     public void move(String commands) {
         if (commands == null || commands.isBlank()) {
             throw new IllegalArgumentException("Input command can't empty.");
@@ -38,6 +39,7 @@ public class Robot {
             }
         }
     }
+
 
     protected void moveForward() {
         if (currentFacingDirection == FacingDirection.NORTH) {
@@ -65,10 +67,12 @@ public class Robot {
         currentFacingDirection = FacingDirectionResolver.changeFacingDirection(currentFacingDirection, MovementInstruction.TURN_RIGHT);
     }
 
+    @Override
     public Coordinate getCoordinate() {
         return coordinate;
     }
 
+    @Override
     public FacingDirection getCurrentFacingDirection() {
         return currentFacingDirection;
     }

@@ -13,7 +13,6 @@ public class App {
         robot.move("FFLFFRRFFRFFF");
 
         System.out.println(robot.getCoordinate());
-
     }
 
 
